@@ -11,6 +11,8 @@ from .exceptions import EnvError
 MODULE_DIR = Path(__file__).absolute().parent
 # Directory with templates and defaults
 AUX_DIR = MODULE_DIR / "aux"
+# Template directory
+TEMPLATE_DIR = MODULE_DIR / "templates"
 # Template for DiagTable
 TEMPLATE_DIAGTABLE = AUX_DIR / "aux" / "template_diagtable.rc"
 # JSON file with grid resolutions

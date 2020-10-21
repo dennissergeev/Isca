@@ -58,4 +58,3 @@ class FailedRunError(IscaError):
     """Raised when Isca experiment fails."""
 
     pass
-
