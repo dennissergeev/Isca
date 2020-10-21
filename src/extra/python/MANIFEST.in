@@ -1,0 +1,4 @@
+include LICENSE
+include isca/templates/*
+include scripts/*
+global-exclude *.py[cod]
