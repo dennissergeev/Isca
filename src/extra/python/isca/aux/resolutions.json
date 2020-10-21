@@ -1,0 +1,26 @@
+{
+ "T170": {
+  "lon_max": 512,
+  "lat_max": 256,
+  "num_fourier": 170,
+  "num_spherical": 171
+ },
+ "T85": {
+  "lon_max": 256,
+  "lat_max": 128,
+  "num_fourier": 85,
+  "num_spherical": 86
+ },
+ "T42": {
+  "lon_max": 128,
+  "lat_max": 64,
+  "num_fourier": 42,
+  "num_spherical": 43
+ },
+ "T21": {
+  "lon_max": 64,
+  "lat_max": 32,
+  "num_fourier": 21,
+  "num_spherical": 22
+ }
+}

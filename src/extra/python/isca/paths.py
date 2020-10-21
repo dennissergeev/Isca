@@ -13,6 +13,8 @@ MODULE_DIR = Path(__file__).absolute().parent
 AUX_DIR = MODULE_DIR / "aux"
 # Template for DiagTable
 TEMPLATE_DIAGTABLE = AUX_DIR / "aux" / "template_diagtable.rc"
+# JSON file with grid resolutions
+RESOLUTIONS = AUX_DIR / "aux" / "resolutions.json"
 
 try:
     GFDL_BASE = Path(os.environ["GFDL_BASE"])
