@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 Generate land for a range of idealized scenarios.
@@ -56,7 +57,7 @@ def write_land(
     t_res = 42
     # read in grid from approriate file
     resolution_file = Dataset(
-        AUX_DIR / "t{}.nc".format(t_res),
+        AUX_DIR / f"t{t_res}.nc",
         "r",
         format="NETCDF3_CLASSIC",
     )

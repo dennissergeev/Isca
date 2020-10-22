@@ -42,7 +42,7 @@ except KeyError:
     import socket  # noqa
 
     GFDL_ENV = socket.getfqdn()
-    log.warning("Environment variable GFDL_ENV not set, using {}".format(GFDL_ENV))
+    log.warning(f"Environment variable GFDL_ENV not set, using {GFDL_ENV}")
 
 
 def get_env_file(env=GFDL_ENV):
@@ -50,7 +50,7 @@ def get_env_file(env=GFDL_ENV):
     if filepath.isfile():
         return filepath
     else:
-        msg = "Environment file {} not found".format(filepath)
+        msg = f"Environment file {filepath} not found"
         log.error(msg)
         raise InpOutError(msg)
 

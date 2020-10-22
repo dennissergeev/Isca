@@ -1,4 +1,4 @@
-[![Python 3](https://img.shields.io/badge/python-3-blue.svg?logo=python&logoColor=white)](https://www.python.org/downloads/)
+[![Python 3.6+](https://img.shields.io/badge/python-3.6+-blue.svg?logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![Build Status](https://travis-ci.com/execlim/Isca.svg?branch=master)](https://travis-ci.com/execlim/Isca)
 [![Documentation](https://img.shields.io/badge/docs-latest-green?logo=github)](https://execlim.github.io/Isca)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg?logo=gnu)](LICENSE)

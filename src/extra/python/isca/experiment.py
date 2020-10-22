@@ -79,7 +79,7 @@ class Experiment(Logger, EventEmitter):
     def clear_workdir(self):
         self.rm_workdir()
         self.workdir.mkdir(parents=True)
-        self.log.info("Emptied working directory {}".format(self.workdir))
+        self.log.info(f"Emptied working directory {self.workdir}")
 
     @destructive
     @useworkdir
@@ -89,7 +89,7 @@ class Experiment(Logger, EventEmitter):
         except FileNotFoundError:
             self.log.warning("Tried to remove run directory but it doesnt exist")
         self.rundir.mkdir(parents=True)
-        self.log.info("Emptied run directory {}".format(self.rundir))
+        self.log.info(f"Emptied run directory {self.rundir}")
 
     def get_restart_file(self, idx):
         return self.restartdir / self.restartfmt.format(idx)
@@ -127,7 +127,7 @@ class Experiment(Logger, EventEmitter):
 
     def write_namelist(self, outdir):
         namelist_file = outdir / "input.nml"
-        self.log.info("Writing namelist to {}".format(namelist_file))
+        self.log.info(f"Writing namelist to {namelist_file}")
         # A fixed column width is added to be a fixed number as most string namelist variables are
         # width 256 in Isca, so that width plus some indentation and the namelist parameters own
         # name should not exceed 350 characters. Default f90nml value is 72, which is regularly
@@ -137,7 +137,7 @@ class Experiment(Logger, EventEmitter):
 
     def write_diag_table(self, outdir):
         outfile = outdir / "diag_table"
-        self.log.info("Writing diag_table to {}".format(outfile))
+        self.log.info(f"Writing diag_table to {outfile}")
         if self.diag_table.is_valid():
             if self.diag_table.calendar is None:
                 # diagnose the calendar from the namelist
@@ -151,7 +151,7 @@ class Experiment(Logger, EventEmitter):
 
     def write_field_table(self, outdir):
         _field_table = outdir / "field_table"
-        self.log.info("Writing field_table to {}".format(_field_table))
+        self.log.info(f"Writing field_table to {_field_table}")
         shutil.copy(self.field_table_file, _field_table)
 
     def log_output(self, outputstring):
@@ -165,7 +165,7 @@ class Experiment(Logger, EventEmitter):
         resfile = self.get_restart_file(run)
         if resfile.is_file():
             resfile.unlink()
-            self.log.info("Deleted restart file {}".format(resfile))
+            self.log.info(f"Deleted restart file {resfile}")
 
     def get_calendar(self):
         """Get the value of 'main_nml/calendar.
@@ -219,16 +219,12 @@ class Experiment(Logger, EventEmitter):
         if self.check_for_existing_output(i):
             if overwrite_data:
                 self.log.warning(
-                    "Data for run {} exists and `overwrite_data=True`. Overwriting.".format(
-                        i
-                    )
+                    f"Data for run {i} exists and `overwrite_data=True`. Overwriting."
                 )
                 shutil.rmtree(outdir)
             else:
                 self.log.warn(
-                    "Data for run {} exists but `overwrite_data=False`. Stopping.".format(
-                        i
-                    )
+                    f"Data for run {i} exists but `overwrite_data=False`. Stopping."
                 )
                 return
 
@@ -263,11 +259,11 @@ class Experiment(Logger, EventEmitter):
                 # get the restart from previous iteration
                 restart_file = self.get_restart_file(i - 1)
             if not restart_file.is_file():
-                msg = "Restart file not found, expecting file {}".format(restart_file)
+                msg = f"Restart file not found, expecting file {restart_file}"
                 self.log.error(msg)
                 raise InpOutError(msg)
             else:
-                self.log.info("Using restart file {}".format(restart_file))
+                self.log.info(f"Using restart file {restart_file}")
 
             self.extract_restart_archive(restart_file, indir)
         else:
@@ -304,7 +300,7 @@ class Experiment(Logger, EventEmitter):
                 _out=_outhandler,
                 _err_to_out=True,
             )
-            self.log.info("process running as {}".format(proc.process.pid))
+            self.log.info(f"Process running as {proc.process.pid}")
             proc.wait()
         except KeyboardInterrupt as e:
             self.log.error("Manual interrupt, killing process.")
@@ -312,14 +308,14 @@ class Experiment(Logger, EventEmitter):
             proc.wait()
             raise e
         except sh.ErrorReturnCode as e:
-            self.log.error("sh error: {}".format(e))
-            msg = "Run {} failed. See log for details.".format(i)
+            self.log.error(f"sh error: {e}")
+            msg = f"Run {i} failed. See log for details."
             self.log.error(msg)
             self.emit("run:failed", self)
             raise FailedRunError(msg)
 
         self.emit("run:complete", self, i)
-        self.log.info("Run {} complete".format(i))
+        self.log.info("Run {i} complete")
         outdir.mkdir()
 
         if num_cores > 1:
@@ -339,7 +335,7 @@ class Experiment(Logger, EventEmitter):
                 codebase_combine_script
             )  # TODO: replace with subprocess
             for file in self.diag_table.files:
-                netcdf_file = "{}.nc".format(file)
+                netcdf_file = f"{file}.nc"
                 filebase = self.rundir / netcdf_file
                 combinetool(self.codebase.builddir, filebase)
                 # copy the combined netcdf file into the data archive directory
@@ -347,9 +343,7 @@ class Experiment(Logger, EventEmitter):
                 # remove all netcdf fragments from the run directory
                 for frag in filebase.glob("*"):
                     frag.unlink()
-                self.log.debug(
-                    "{} combined and copied to data directory".format(netcdf_file)
-                )
+                self.log.debug(f"{netcdf_file} combined and copied to data directory")
 
             for restart in resdir.glob("*.res.nc.0000"):
                 restartfile = restart.with_suffix("")
@@ -357,17 +351,17 @@ class Experiment(Logger, EventEmitter):
                 # sh.rm(glob.glob(restartfile + ".????"))
                 for file in restartfile.parent.glob("*.res.nc.????"):
                     file.unlink()  # TODO: check this!
-                self.log.debug("Restart file {} combined".format(restartfile))
+                self.log.debug(f"Restart file {restartfile} combined")
 
             self.emit("run:combined", self, i)
         else:
             for file in self.diag_table.files:
-                netcdf_file = "{}.nc".format(file)
+                netcdf_file = f"{file}.nc"
                 filebase = self.rundir / netcdf_file
                 shutil.copy(filebase, outdir / netcdf_file)
                 for frag in filebase.glob("*"):
                     frag.unlink()
-                self.log.debug("{} copied to data directory".format(netcdf_file))
+                self.log.debug(f"{netcdf_file} copied to data directory")
 
         # make the restart archive and delete the restart files
         self.make_restart_archive(self.get_restart_file(i), resdir)
@@ -393,14 +387,12 @@ class Experiment(Logger, EventEmitter):
     def make_restart_archive(self, archive_file, restart_directory):
         with tarfile.open(archive_file, "w:gz") as tar:
             tar.add(restart_directory, arcname=".")
-        self.log.info("Restart archive created at {}".format(archive_file))
+        self.log.info(f"Restart archive created at {archive_file}")
 
     def extract_restart_archive(self, archive_file, input_directory):
         with tarfile.open(archive_file, "r:gz") as tar:
             tar.extractall(path=input_directory)
-        self.log.info(
-            "Restart {} extracted to {}".format(archive_file, input_directory)
-        )
+        self.log.info(f"Restart {archive_file} extracted to {input_directory}")
 
     def derive(self, new_experiment_name):
         """Derive a new experiment based on this one."""

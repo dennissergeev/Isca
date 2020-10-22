@@ -34,6 +34,6 @@ except KeyError:
     GFDL_SOC = None
     msg = (
         "Environment variable GFDL_SOC not set, but this is only required"
-        " if using `SocratesCodebase`. Setting to {}".format(GFDL_SOC)
+        f" if using `SocratesCodebase`. Setting to {GFDL_SOC}"
     )
     log.warning(msg)

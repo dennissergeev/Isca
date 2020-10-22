@@ -15,7 +15,7 @@ def destructive(fn):
         self = args[0]
         if self.safe_mode:
             raise AttributeError(
-                "Cannot run destructive function {} in safe mode.".format(fn.__name__)
+                "Cannot run destructive function {fn.__name__} in safe mode."
             )
         else:
             return fn(*args, **kwargs)
@@ -32,7 +32,7 @@ def useworkdir(fn):
     @wraps(fn)
     def _useworkdir(*args, **kwargs):
         self = args[0]
-        self.log.debug("Using directory {}".format(self.workdir))
+        self.log.debug("Using directory {self.workdir}")
         # TODO: check object has workdir and log attributes.
         self.workdir.mkdir(parents=True, exist_ok=True)
         return fn(*args, **kwargs)
